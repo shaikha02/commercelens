@@ -11,5 +11,6 @@ describe("reconcileTransaction", () => {
     expect(reconcileTransaction(transactions[4]).map((finding) => finding.id)).toContain("revenue-mismatch");
     expect(reconcileTransaction(transactions[5]).map((finding) => finding.id)).toContain("missing-tax");
     expect(reconcileTransaction(transactions[6]).map((finding) => finding.id)).toContain("receipt-balance-mismatch");
+    expect(reconcileTransaction(transactions[7]).map((finding) => finding.id)).toContain("missing-receipt");
   });
 });
