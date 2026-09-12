@@ -4,7 +4,11 @@ import type { Finding } from "./types";
 const find = (transaction: Transaction, system: string) => transaction.events.find((event) => event.system === system);
 export function reconcileTransaction(transaction: Transaction): Finding[] {
   const findings: Finding[] = [];
-  const ar = find(transaction, "AR"), gl = find(transaction, "GL"), revenue = find(transaction, "Revenue"), tax = find(transaction, "Tax"), receipt = find(transaction, "Receipt");
+  const ar = find(transaction, "AR");
+  const gl = find(transaction, "GL");
+  const revenue = find(transaction, "Revenue");
+  const tax = find(transaction, "Tax");
+  const receipt = find(transaction, "Receipt");
   if (ar && !gl) findings.push({ id: "ar-without-gl", severity: "critical", title: "AR posted but GL journal is missing", evidence: `AR reference ${ar.reference} for ${transaction.currency} ${ar.amount.toLocaleString()} exists; no GL event was recorded.`, recommendation: "Review the AR-to-GL posting queue and create or replay the missing journal." });
   if (revenue && revenue.amount !== transaction.invoiceTotal) findings.push({ id: "revenue-mismatch", severity: "critical", title: "Invoice total differs from recognized revenue", evidence: `Invoice is ${transaction.currency} ${transaction.invoiceTotal.toLocaleString()}; revenue reference ${revenue.reference} is ${transaction.currency} ${revenue.amount.toLocaleString()}.`, recommendation: "Validate the recognition schedule and post a correcting revenue entry." });
   if (transaction.taxable && !tax) findings.push({ id: "missing-tax", severity: "warning", title: "Taxable transaction has no filing event", evidence: `Invoice ${transaction.invoiceNumber} is marked taxable but no Tax evidence was found.`, recommendation: "Confirm tax determination, then submit or record the required filing." });
