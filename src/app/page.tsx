@@ -54,7 +54,7 @@ export default function Home() {
             <div className="mt-5 divide-y divide-slate-100">
               {priority.map(({ transaction, findings }) => (
                 <Link key={transaction.id} href={`/transactions/${transaction.id}`} className="flex items-center justify-between gap-4 py-4 transition hover:bg-slate-50">
-                  <div><p className="font-semibold">{transaction.invoiceNumber} <span className="font-normal text-slate-500">· {transaction.customer}</span></p><p className="mt-1 text-sm text-slate-500">{findings[0].title}</p></div>
+                  <div><p className="font-semibold">{transaction.invoiceNumber} <span className="font-normal text-slate-500">· {transaction.customer}</span></p><p className="mt-1 text-sm text-slate-500">{findings[0]?.title ?? "Requires investigation"}</p></div>
                   <SeverityBadge severity={findings.some((f) => f.severity === "critical") ? "critical" : "warning"} />
                 </Link>
               ))}
