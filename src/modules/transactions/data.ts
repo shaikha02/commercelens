@@ -1,6 +1,6 @@
 import type { Transaction } from "./types";
-const eventStartDay = 2;
-const eventTimestamp = (index: number) => `2026-09-${String(index + eventStartDay).padStart(2, "0")}T10:30:00Z`;
+const firstLifecycleDay = 2;
+const eventTimestamp = (index: number) => `2026-09-${String(index + firstLifecycleDay).padStart(2, "0")}T10:30:00Z`;
 const event = (id: string, system: Transaction["events"][number]["system"], amount: number, reference: string, index: number, status: Transaction["events"][number]["status"] = "posted") => ({ id, system, amount, currency: "USD", reference, status, occurredAt: eventTimestamp(index), description: `${system} ${status}` });
 const lifecycle = (id: string, total: number) => ["Invoice", "AR", "GL", "Revenue", "Tax", "Receipt"].map((system, index) => event(`${id}-${index}`, system as Transaction["events"][number]["system"], total, `${system.slice(0, 2).toUpperCase()}-${id}`, index));
 const complete = (id: string, total: number, customer: string): Transaction => ({ id, invoiceNumber: `INV-2026-${id.padStart(4, "0")}`, customer, invoiceTotal: total, currency: "USD", taxable: true, createdAt: "2026-09-02T09:00:00Z", events: lifecycle(id, total) });
