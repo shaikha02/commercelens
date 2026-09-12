@@ -7,13 +7,14 @@ const alpine = complete("1004", 3200, "Alpine Outfitters");
 const blueYonder = complete("1005", 1500, "Blue Yonder");
 const tailspin = complete("1006", 925, "Tailspin Toys");
 const litware = complete("1007", 1800, "Litware");
+const adventureWorks = complete("1008", 640, "Adventure Works");
 export const transactions: Transaction[] = [
   complete("1001", 1240, "Northstar Goods"), complete("1002", 860, "Fabrikam Studio"), complete("1003", 2475, "Contoso Retail"),
   { ...alpine, events: alpine.events.filter((e) => e.system !== "GL") },
   { ...blueYonder, events: blueYonder.events.map((e) => e.system === "Revenue" ? { ...e, amount: 1350 } : e) },
   { ...tailspin, events: tailspin.events.filter((e) => e.system !== "Tax") },
   { ...litware, events: litware.events.map((e) => e.system === "Receipt" ? { ...e, amount: 1500 } : e) },
-  { ...complete("1008", 640, "Adventure Works"), events: complete("1008", 640, "Adventure Works").events.filter((e) => e.system !== "Receipt") },
+  { ...adventureWorks, events: adventureWorks.events.filter((e) => e.system !== "Receipt") },
   complete("1009", 4320, "Woodgrove Bank"), complete("1010", 715, "Proseware"),
 ];
 export const getTransaction = (id: string) => transactions.find((transaction) => transaction.id === id);
