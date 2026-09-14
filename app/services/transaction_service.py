@@ -39,7 +39,15 @@ class TransactionService:
             tax_reporting=tax_report.status if tax_report else "MISSING",
             tax_receipt=tax_receipt.status if tax_receipt else "MISSING",
         )
-        lifecycle_status = "COMPLETE" if stages.model_dump() == self.COMPLETE_STAGE_STATUSES else "PARTIALLY_COMPLETE"
+        actual_stages = stages.model_dump()
+        expected_stage_names = set(self.COMPLETE_STAGE_STATUSES)
+        if set(actual_stages) != expected_stage_names:
+            raise RuntimeError("Lifecycle stage definitions do not match completion rules")
+        lifecycle_status = (
+            "COMPLETE"
+            if all(actual_stages[stage] == expected for stage, expected in self.COMPLETE_STAGE_STATUSES.items())
+            else "PARTIALLY_COMPLETE"
+        )
         return InvoiceSummary(
             invoice_id=invoice.invoice_id,
             order_id=invoice.order_id,

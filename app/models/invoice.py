@@ -1,11 +1,8 @@
 from datetime import date
-from decimal import Decimal
-from typing import Annotated
 
-from pydantic import BaseModel, PlainSerializer
+from pydantic import BaseModel
 
-
-MoneyDecimal = Annotated[Decimal, PlainSerializer(lambda value: str(value), return_type=str, when_used="json")]
+from app.models.common import MoneyDecimal
 
 
 class Invoice(BaseModel):

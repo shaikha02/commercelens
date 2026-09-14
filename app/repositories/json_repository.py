@@ -1,3 +1,4 @@
+from copy import deepcopy
 import json
 from pathlib import Path
 from typing import Any
@@ -10,7 +11,7 @@ class JsonRepository:
 
     def load_collection(self, filename: str) -> list[dict[str, Any]]:
         if filename in self._collection_cache:
-            return self._collection_cache[filename]
+            return deepcopy(self._collection_cache[filename])
 
         path = (self.data_dir / filename).resolve()
         with path.open("r", encoding="utf-8") as file:
@@ -18,4 +19,4 @@ class JsonRepository:
         if not isinstance(data, list):
             raise ValueError(f"Expected {filename} to contain a JSON array")
         self._collection_cache[filename] = data
-        return data
+        return deepcopy(data)

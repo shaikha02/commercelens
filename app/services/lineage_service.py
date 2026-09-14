@@ -7,6 +7,7 @@ class LineageService:
         self.repository = repository
 
     def get_lineage(self, invoice_id: str) -> LineageGraph | None:
+        """Return a derived lineage graph or None when the invoice ID is unknown."""
         invoice = self.repository.get_invoice(invoice_id)
         if invoice is None:
             return None
