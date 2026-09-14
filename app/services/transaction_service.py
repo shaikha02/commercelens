@@ -16,9 +16,11 @@ class TransactionService:
         self.repository = repository
 
     def get_invoice(self, invoice_id: str) -> Invoice | None:
+        """Return an invoice or None when the invoice ID is unknown."""
         return self.repository.get_invoice(invoice_id)
 
     def get_summary(self, invoice_id: str) -> InvoiceSummary | None:
+        """Return a derived summary or None when the invoice ID is unknown."""
         invoice = self.repository.get_invoice(invoice_id)
         if invoice is None:
             return None

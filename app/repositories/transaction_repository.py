@@ -1,7 +1,13 @@
+from typing import TypeVar
+
+from pydantic import BaseModel
+
 from app.models.event import Event
 from app.models.invoice import Invoice
 from app.models.records import ARRecord, GLRecord, RevenueRecord, TaxReceipt, TaxReport, Transformation
 from app.repositories.json_repository import JsonRepository
+
+ModelT = TypeVar("ModelT", bound=BaseModel)
 
 
 class TransactionRepository:
@@ -40,7 +46,7 @@ class TransactionRepository:
         ]
         return sorted(events, key=lambda event: event.timestamp)
 
-    def _find_one(self, filename: str, model: type, invoice_id: str):
+    def _find_one(self, filename: str, model: type[ModelT], invoice_id: str) -> ModelT | None:
         for item in self.json_repository.load_collection(filename):
             if item.get("invoice_id") == invoice_id:
                 return model.model_validate(item)

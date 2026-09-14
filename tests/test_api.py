@@ -7,7 +7,7 @@ from app.main import app
 client = TestClient(app)
 
 
-BROKEN_EVENT_TYPES = [
+EXPECTED_EVENT_TYPES = [
     "InvoiceCreated",
     "InvoicePDFGenerated",
     "TaxInvoiceGenerated",
@@ -16,6 +16,15 @@ BROKEN_EVENT_TYPES = [
     "RevenueReported",
     "TaxReported",
     "TaxReceiptGenerated",
+]
+
+EXPECTED_BROKEN_SUCCEEDED_EVENT_TYPES = [
+    "InvoiceCreated",
+    "InvoicePDFGenerated",
+    "TaxInvoiceGenerated",
+    "ARPosted",
+    "GLPosted",
+    "RevenueReported",
 ]
 
 
@@ -112,7 +121,7 @@ def test_events_are_filtered_and_sorted_chronologically() -> None:
     response = client.get("/api/v1/invoices/INV-8421/events")
     assert response.status_code == 200
     events = response.json()
-    assert [event["event_type"] for event in events] == BROKEN_EVENT_TYPES
+    assert [event["event_type"] for event in events] == EXPECTED_EVENT_TYPES
     assert {event["invoice_id"] for event in events} == {"INV-8421"}
     timestamps = [datetime.fromisoformat(event["timestamp"].replace("Z", "+00:00")) for event in events]
     assert timestamps == sorted(timestamps)
@@ -122,7 +131,7 @@ def test_broken_invoice_event_failures_are_exact() -> None:
     response = client.get("/api/v1/invoices/INV-8421/events")
     assert response.status_code == 200
     events = {event["event_type"]: event for event in response.json()}
-    for event_type in BROKEN_EVENT_TYPES[:-2]:
+    for event_type in EXPECTED_BROKEN_SUCCEEDED_EVENT_TYPES:
         assert events[event_type]["status"] == "SUCCEEDED"
         assert events[event_type]["error_message"] is None
     assert events["TaxReported"]["status"] == "FAILED"
@@ -135,6 +144,6 @@ def test_healthy_invoice_events_all_succeed_and_are_isolated() -> None:
     response = client.get("/api/v1/invoices/INV-1001/events")
     assert response.status_code == 200
     events = response.json()
-    assert [event["event_type"] for event in events] == BROKEN_EVENT_TYPES
+    assert [event["event_type"] for event in events] == EXPECTED_EVENT_TYPES
     assert {event["invoice_id"] for event in events} == {"INV-1001"}
     assert {event["status"] for event in events} == {"SUCCEEDED"}
