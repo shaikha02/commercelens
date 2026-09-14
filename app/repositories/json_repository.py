@@ -6,6 +6,8 @@ from typing import Any
 
 
 class JsonRepository:
+    """Loads local JSON fixture collections and caches them for the process lifetime."""
+
     def __init__(self, data_dir: Path):
         self.data_dir = data_dir
         self._collection_cache: dict[str, tuple[Mapping[str, Any], ...]] = {}

@@ -54,7 +54,3 @@ class TransactionService:
             invoice_tax=invoice.tax,
             stages=stages,
         )
-
-
-if set(LifecycleStages.model_fields) != set(TransactionService.COMPLETE_STAGE_STATUSES):
-    raise RuntimeError("Lifecycle stage definitions do not match completion rules")

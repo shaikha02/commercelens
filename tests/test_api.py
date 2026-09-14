@@ -5,8 +5,10 @@ from fastapi.testclient import TestClient
 
 from app.api.dependencies import get_transaction_repository
 from app.main import app
+from app.models.invoice import LifecycleStages
 from app.repositories.json_repository import JsonRepository
 from app.repositories.transaction_repository import TransactionRepository
+from app.services.transaction_service import TransactionService
 
 client = TestClient(app)
 
@@ -93,6 +95,22 @@ def test_healthy_invoice_summary_is_complete() -> None:
         "tax_reporting": "REPORTED",
         "tax_receipt": "GENERATED",
     }
+
+
+def test_lifecycle_completion_rules_match_summary_stage_fields() -> None:
+    assert set(LifecycleStages.model_fields) == set(TransactionService.COMPLETE_STAGE_STATUSES)
+
+
+def test_json_repository_rejects_non_array_fixture(tmp_path) -> None:
+    (tmp_path / "bad.json").write_text('{"not": "a collection"}', encoding="utf-8")
+    repository = JsonRepository(tmp_path)
+
+    try:
+        repository.load_collection("bad.json")
+    except ValueError as exc:
+        assert str(exc) == "Expected bad.json to contain a JSON array"
+    else:
+        raise AssertionError("Expected ValueError for non-array fixture")
 
 
 def test_existing_invoice_with_missing_downstream_records_uses_missing_fallbacks(tmp_path) -> None:
