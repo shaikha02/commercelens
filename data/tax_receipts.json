@@ -1,0 +1,18 @@
+[
+  {
+    "record_id": "TAXRCPT-1001",
+    "invoice_id": "INV-1001",
+    "tax_report_id": "TAXREP-1001",
+    "status": "GENERATED",
+    "receipt_reference": "RCPT-US-1001",
+    "generated_date": "2026-01-10"
+  },
+  {
+    "record_id": "TAXRCPT-8421",
+    "invoice_id": "INV-8421",
+    "tax_report_id": "TAXREP-8421",
+    "status": "NOT_GENERATED",
+    "receipt_reference": null,
+    "generated_date": null
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "invoice_id": "INV-1001",
+    "order_id": "ORD-1001",
+    "customer_id": "CUST-ACME",
+    "currency": "USD",
+    "invoice_date": "2026-01-10",
+    "subtotal": "1000.00",
+    "tax": "80.00",
+    "total": "1080.00",
+    "status": "GENERATED"
+  },
+  {
+    "invoice_id": "INV-8421",
+    "order_id": "ORD-8421",
+    "customer_id": "CUST-GLOBAL-RETAIL",
+    "currency": "USD",
+    "invoice_date": "2026-01-11",
+    "subtotal": "100000",
+    "tax": "18000",
+    "total": "118000",
+    "status": "GENERATED"
+  }
+]

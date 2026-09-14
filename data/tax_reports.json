@@ -1,0 +1,22 @@
+[
+  {
+    "record_id": "TAXREP-1001",
+    "invoice_id": "INV-1001",
+    "taxable_amount": "1000.00",
+    "tax_amount": "80.00",
+    "currency": "USD",
+    "transformation_version": "V3.1",
+    "status": "REPORTED",
+    "submitted_date": "2026-01-10"
+  },
+  {
+    "record_id": "TAXREP-8421",
+    "invoice_id": "INV-8421",
+    "taxable_amount": "98000",
+    "tax_amount": "16000",
+    "currency": "USD",
+    "transformation_version": "V3.2",
+    "status": "MISMATCH",
+    "submitted_date": null
+  }
+]

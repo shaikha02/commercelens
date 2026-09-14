@@ -1,0 +1,20 @@
+[
+  {
+    "record_id": "GL-1001",
+    "invoice_id": "INV-1001",
+    "amount": "1080.00",
+    "currency": "USD",
+    "status": "POSTED",
+    "ledger_account": "4000-REVENUE-CLEARING",
+    "posted_date": "2026-01-10"
+  },
+  {
+    "record_id": "GL-8421",
+    "invoice_id": "INV-8421",
+    "amount": "118000",
+    "currency": "USD",
+    "status": "POSTED",
+    "ledger_account": "4000-REVENUE-CLEARING",
+    "posted_date": "2026-01-11"
+  }
+]
