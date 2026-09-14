@@ -65,7 +65,7 @@ def test_missing_invoice_endpoints_return_404() -> None:
         assert response.status_code == 404, endpoint
 
 
-def test_broken_invoice_summary_is_partially_complete() -> None:
+def test_broken_invoice_inv_8421_summary_is_partially_complete() -> None:
     response = client.get("/api/v1/invoices/INV-8421/summary")
     assert response.status_code == 200
     body = response.json()
@@ -111,6 +111,18 @@ def test_json_repository_rejects_non_array_fixture(tmp_path) -> None:
         assert str(exc) == "Expected bad.json to contain a JSON array"
     else:
         raise AssertionError("Expected ValueError for non-array fixture")
+
+
+def test_json_repository_rejects_non_object_collection_item(tmp_path) -> None:
+    (tmp_path / "bad.json").write_text('["not an object"]', encoding="utf-8")
+    repository = JsonRepository(tmp_path)
+
+    try:
+        repository.load_collection("bad.json")
+    except ValueError as exc:
+        assert str(exc) == "Expected bad.json[0] to contain a JSON object"
+    else:
+        raise AssertionError("Expected ValueError for non-object fixture item")
 
 
 def test_existing_invoice_with_missing_downstream_records_uses_missing_fallbacks(tmp_path) -> None:

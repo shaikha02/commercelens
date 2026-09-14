@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.models.common import MoneyDecimal
 
@@ -61,4 +61,4 @@ class Transformation(BaseModel):
     source_record_type: str
     target_record_type: str
     rules: list[str]
-    metadata: dict[str, Any] = {}
+    metadata: dict[str, Any] = Field(default_factory=dict)

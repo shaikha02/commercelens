@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+from threading import Lock
 from typing import TypeVar
 
 from pydantic import BaseModel
@@ -13,6 +15,10 @@ ModelT = TypeVar("ModelT", bound=BaseModel)
 class TransactionRepository:
     def __init__(self, json_repository: JsonRepository):
         self.json_repository = json_repository
+        self._invoice_indexes: dict[str, dict[str, Mapping[str, object]]] = {}
+        self._transformation_index: dict[str, Mapping[str, object]] | None = None
+        self._event_index: dict[str, list[Event]] | None = None
+        self._index_lock = Lock()
 
     def get_invoice(self, invoice_id: str) -> Invoice | None:
         return self._find_one("invoices.json", Invoice, invoice_id)
@@ -33,21 +39,39 @@ class TransactionRepository:
         return self._find_one("tax_receipts.json", TaxReceipt, invoice_id)
 
     def get_transformation(self, version: str) -> Transformation | None:
-        for item in self.json_repository.load_collection("transformations.json"):
-            if item.get("version") == version:
-                return Transformation.model_validate(item)
+        if self._transformation_index is None:
+            with self._index_lock:
+                if self._transformation_index is None:
+                    self._transformation_index = {
+                        str(item["version"]): item for item in self.json_repository.load_collection("transformations.json")
+                    }
+        item = self._transformation_index.get(version)
+        if item is not None:
+            return Transformation.model_validate(item)
         return None
 
     def list_events(self, invoice_id: str) -> list[Event]:
-        events = [
-            Event.model_validate(item)
-            for item in self.json_repository.load_collection("events.json")
-            if item.get("invoice_id") == invoice_id
-        ]
-        return sorted(events, key=lambda event: event.timestamp)
+        if self._event_index is None:
+            with self._index_lock:
+                if self._event_index is None:
+                    event_index: dict[str, list[Event]] = {}
+                    for item in self.json_repository.load_collection("events.json"):
+                        event = Event.model_validate(item)
+                        event_index.setdefault(event.invoice_id, []).append(event)
+                    for events in event_index.values():
+                        events.sort(key=lambda event: event.timestamp)
+                    self._event_index = event_index
+        return list(self._event_index.get(invoice_id, []))
 
     def _find_one(self, filename: str, model: type[ModelT], invoice_id: str) -> ModelT | None:
-        for item in self.json_repository.load_collection(filename):
-            if item.get("invoice_id") == invoice_id:
-                return model.model_validate(item)
+        index = self._invoice_indexes.get(filename)
+        if index is None:
+            with self._index_lock:
+                index = self._invoice_indexes.get(filename)
+                if index is None:
+                    index = {str(item["invoice_id"]): item for item in self.json_repository.load_collection(filename)}
+                    self._invoice_indexes[filename] = index
+        item = index.get(invoice_id)
+        if item is not None:
+            return model.model_validate(item)
         return None

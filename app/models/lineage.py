@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class LineageNode(BaseModel):
@@ -8,7 +8,7 @@ class LineageNode(BaseModel):
     type: str
     label: str
     status: str
-    metadata: dict[str, Any] = {}
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class LineageEdge(BaseModel):
