@@ -1,0 +1,146 @@
+[
+  {
+    "event_id": "EVT-8421-08",
+    "invoice_id": "INV-8421",
+    "event_type": "TaxReceiptGenerated",
+    "status": "FAILED",
+    "timestamp": "2026-01-11T10:07:00Z",
+    "message": "Tax receipt generation failed",
+    "error_message": "Submission rejected because tax reporting record was invalid"
+  },
+  {
+    "event_id": "EVT-1001-04",
+    "invoice_id": "INV-1001",
+    "event_type": "ARPosted",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:03:00Z",
+    "message": "AR record posted successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-06",
+    "invoice_id": "INV-8421",
+    "event_type": "RevenueReported",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:05:00Z",
+    "message": "Revenue reported successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-01",
+    "invoice_id": "INV-1001",
+    "event_type": "InvoiceCreated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:00:00Z",
+    "message": "Invoice created from order ORD-1001",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-01",
+    "invoice_id": "INV-8421",
+    "event_type": "InvoiceCreated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:00:00Z",
+    "message": "Invoice created from order ORD-8421",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-07",
+    "invoice_id": "INV-8421",
+    "event_type": "TaxReported",
+    "status": "FAILED",
+    "timestamp": "2026-01-11T10:06:00Z",
+    "message": "Tax reporting failed",
+    "error_message": "Country mapping mismatch"
+  },
+  {
+    "event_id": "EVT-1001-08",
+    "invoice_id": "INV-1001",
+    "event_type": "TaxReceiptGenerated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:07:00Z",
+    "message": "Tax receipt generated successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-03",
+    "invoice_id": "INV-8421",
+    "event_type": "TaxInvoiceGenerated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:02:00Z",
+    "message": "Tax invoice generated successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-03",
+    "invoice_id": "INV-1001",
+    "event_type": "TaxInvoiceGenerated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:02:00Z",
+    "message": "Tax invoice generated successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-02",
+    "invoice_id": "INV-8421",
+    "event_type": "InvoicePDFGenerated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:01:00Z",
+    "message": "Invoice PDF generated successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-07",
+    "invoice_id": "INV-1001",
+    "event_type": "TaxReported",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:06:00Z",
+    "message": "Tax reported successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-05",
+    "invoice_id": "INV-8421",
+    "event_type": "GLPosted",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:04:00Z",
+    "message": "GL record posted successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-06",
+    "invoice_id": "INV-1001",
+    "event_type": "RevenueReported",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:05:00Z",
+    "message": "Revenue reported successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-8421-04",
+    "invoice_id": "INV-8421",
+    "event_type": "ARPosted",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-11T10:03:00Z",
+    "message": "AR record posted successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-02",
+    "invoice_id": "INV-1001",
+    "event_type": "InvoicePDFGenerated",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:01:00Z",
+    "message": "Invoice PDF generated successfully",
+    "error_message": null
+  },
+  {
+    "event_id": "EVT-1001-05",
+    "invoice_id": "INV-1001",
+    "event_type": "GLPosted",
+    "status": "SUCCEEDED",
+    "timestamp": "2026-01-10T09:04:00Z",
+    "message": "GL record posted successfully",
+    "error_message": null
+  }
+]

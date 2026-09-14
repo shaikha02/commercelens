@@ -1,0 +1,18 @@
+[
+  {
+    "record_id": "REV-1001",
+    "invoice_id": "INV-1001",
+    "amount": "1000.00",
+    "currency": "USD",
+    "status": "REPORTED",
+    "recognition_date": "2026-01-10"
+  },
+  {
+    "record_id": "REV-8421",
+    "invoice_id": "INV-8421",
+    "amount": "100000",
+    "currency": "USD",
+    "status": "REPORTED",
+    "recognition_date": "2026-01-11"
+  }
+]

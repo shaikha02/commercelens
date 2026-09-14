@@ -1,0 +1,36 @@
+[
+  {
+    "version": "V3.1",
+    "name": "Standard US tax reporting transform",
+    "description": "Maps reported revenue to taxable amount and tax due for successful domestic invoices.",
+    "source_record_type": "Revenue",
+    "target_record_type": "Tax Report",
+    "rules": [
+      "Use recognized revenue amount as taxable amount",
+      "Apply configured jurisdiction tax rate",
+      "Require valid country mapping"
+    ],
+    "metadata": {
+      "owner": "tax-platform",
+      "jurisdiction": "US",
+      "expected_tax_rate": "0.08"
+    }
+  },
+  {
+    "version": "V3.2",
+    "name": "Cross-border tax reporting transform",
+    "description": "Maps revenue into tax reporting using country and product mappings; INV-8421 exposes a deliberate country mapping mismatch.",
+    "source_record_type": "Revenue",
+    "target_record_type": "Tax Report",
+    "rules": [
+      "Resolve ship-to country mapping",
+      "Exclude non-taxable adjustments before reporting",
+      "Calculate tax from mapped country rate"
+    ],
+    "metadata": {
+      "owner": "tax-platform",
+      "jurisdiction": "cross-border",
+      "known_issue": "Country mapping mismatch can understate taxable amount"
+    }
+  }
+]
