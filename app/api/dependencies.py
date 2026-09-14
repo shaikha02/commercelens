@@ -12,12 +12,12 @@ from app.services.transaction_service import TransactionService
 
 
 @lru_cache
-def _get_transaction_repository(data_dir: str) -> TransactionRepository:
-    return TransactionRepository(JsonRepository(Path(data_dir)))
+def _get_transaction_repository(data_dir: Path) -> TransactionRepository:
+    return TransactionRepository(JsonRepository(data_dir))
 
 
 def get_transaction_repository(settings: Settings = Depends(get_settings)) -> TransactionRepository:
-    return _get_transaction_repository(str(settings.data_dir))
+    return _get_transaction_repository(settings.data_dir)
 
 
 def get_transaction_service(repository: TransactionRepository = Depends(get_transaction_repository)) -> TransactionService:

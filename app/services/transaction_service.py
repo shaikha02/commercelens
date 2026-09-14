@@ -40,9 +40,6 @@ class TransactionService:
             tax_receipt=tax_receipt.status if tax_receipt else "MISSING",
         )
         actual_stages = stages.model_dump()
-        expected_stage_names = set(self.COMPLETE_STAGE_STATUSES)
-        if set(actual_stages) != expected_stage_names:
-            raise RuntimeError("Lifecycle stage definitions do not match completion rules")
         lifecycle_status = (
             "COMPLETE"
             if all(actual_stages[stage] == expected for stage, expected in self.COMPLETE_STAGE_STATUSES.items())
@@ -57,3 +54,7 @@ class TransactionService:
             invoice_tax=invoice.tax,
             stages=stages,
         )
+
+
+if set(LifecycleStages.model_fields) != set(TransactionService.COMPLETE_STAGE_STATUSES):
+    raise RuntimeError("Lifecycle stage definitions do not match completion rules")

@@ -1,8 +1,12 @@
+import json
 from datetime import datetime
 
 from fastapi.testclient import TestClient
 
+from app.api.dependencies import get_transaction_repository
 from app.main import app
+from app.repositories.json_repository import JsonRepository
+from app.repositories.transaction_repository import TransactionRepository
 
 client = TestClient(app)
 
@@ -59,7 +63,7 @@ def test_missing_invoice_endpoints_return_404() -> None:
         assert response.status_code == 404, endpoint
 
 
-def test_broken_invoice_summary_state() -> None:
+def test_broken_invoice_summary_is_partially_complete() -> None:
     response = client.get("/api/v1/invoices/INV-8421/summary")
     assert response.status_code == 200
     body = response.json()
@@ -89,6 +93,64 @@ def test_healthy_invoice_summary_is_complete() -> None:
         "tax_reporting": "REPORTED",
         "tax_receipt": "GENERATED",
     }
+
+
+def test_existing_invoice_with_missing_downstream_records_uses_missing_fallbacks(tmp_path) -> None:
+    (tmp_path / "invoices.json").write_text(
+        json.dumps(
+            [
+                {
+                    "invoice_id": "INV-MISSING",
+                    "order_id": "ORD-MISSING",
+                    "customer_id": "CUST-MISSING",
+                    "currency": "USD",
+                    "invoice_date": "2026-01-12",
+                    "subtotal": "10.00",
+                    "tax": "1.00",
+                    "total": "11.00",
+                    "status": "GENERATED",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    for filename in [
+        "ar_records.json",
+        "gl_records.json",
+        "revenue_records.json",
+        "tax_reports.json",
+        "tax_receipts.json",
+        "transformations.json",
+        "events.json",
+    ]:
+        (tmp_path / filename).write_text("[]\n", encoding="utf-8")
+
+    repository = TransactionRepository(JsonRepository(tmp_path))
+    app.dependency_overrides[get_transaction_repository] = lambda: repository
+    try:
+        summary_response = client.get("/api/v1/invoices/INV-MISSING/summary")
+        lineage_response = client.get("/api/v1/invoices/INV-MISSING/lineage")
+    finally:
+        app.dependency_overrides.clear()
+
+    assert summary_response.status_code == 200
+    assert summary_response.json()["stages"] == {
+        "invoice": "GENERATED",
+        "ar": "MISSING",
+        "gl": "MISSING",
+        "revenue": "MISSING",
+        "tax_reporting": "MISSING",
+        "tax_receipt": "MISSING",
+    }
+    assert lineage_response.status_code == 200
+    node_ids = {node["id"] for node in lineage_response.json()["nodes"]}
+    assert {
+        "ar:missing:INV-MISSING",
+        "gl:missing:INV-MISSING",
+        "revenue:missing:INV-MISSING",
+        "tax_report:missing:INV-MISSING",
+        "tax_receipt:missing:INV-MISSING",
+    }.issubset(node_ids)
 
 
 def test_lineage_topology_and_references() -> None:
