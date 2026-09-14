@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.api.dependencies import get_transaction_repository
@@ -105,24 +106,16 @@ def test_json_repository_rejects_non_array_fixture(tmp_path) -> None:
     (tmp_path / "bad.json").write_text('{"not": "a collection"}', encoding="utf-8")
     repository = JsonRepository(tmp_path)
 
-    try:
+    with pytest.raises(ValueError, match="Expected bad.json to contain a JSON array"):
         repository.load_collection("bad.json")
-    except ValueError as exc:
-        assert str(exc) == "Expected bad.json to contain a JSON array"
-    else:
-        raise AssertionError("Expected ValueError for non-array fixture")
 
 
 def test_json_repository_rejects_non_object_collection_item(tmp_path) -> None:
     (tmp_path / "bad.json").write_text('["not an object"]', encoding="utf-8")
     repository = JsonRepository(tmp_path)
 
-    try:
+    with pytest.raises(ValueError, match=r"Expected bad\.json\[0\] to contain a JSON object"):
         repository.load_collection("bad.json")
-    except ValueError as exc:
-        assert str(exc) == "Expected bad.json[0] to contain a JSON object"
-    else:
-        raise AssertionError("Expected ValueError for non-object fixture item")
 
 
 def test_existing_invoice_with_missing_downstream_records_uses_missing_fallbacks(tmp_path) -> None:

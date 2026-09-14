@@ -69,7 +69,11 @@ class TransactionRepository:
             with self._index_lock:
                 index = self._invoice_indexes.get(filename)
                 if index is None:
-                    index = {str(item["invoice_id"]): item for item in self.json_repository.load_collection(filename)}
+                    index = {}
+                    for item_index, item in enumerate(self.json_repository.load_collection(filename)):
+                        if "invoice_id" not in item:
+                            raise ValueError(f"Expected {filename}[{item_index}] to contain an invoice_id")
+                        index[str(item["invoice_id"])] = item
                     self._invoice_indexes[filename] = index
         item = index.get(invoice_id)
         if item is not None:

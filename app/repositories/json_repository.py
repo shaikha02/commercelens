@@ -1,5 +1,6 @@
 from collections.abc import Mapping
 import json
+from json import JSONDecodeError
 from pathlib import Path
 from threading import Lock
 from types import MappingProxyType
@@ -23,8 +24,13 @@ class JsonRepository:
                 return self._collection_cache[filename]
 
             path = (self.data_dir / filename).resolve()
-            with path.open("r", encoding="utf-8") as file:
-                data = json.load(file)
+            try:
+                with path.open("r", encoding="utf-8") as file:
+                    data = json.load(file)
+            except FileNotFoundError as exc:
+                raise ValueError(f"Fixture file not found: {filename}") from exc
+            except JSONDecodeError as exc:
+                raise ValueError(f"Fixture file contains invalid JSON: {filename}") from exc
             if not isinstance(data, list):
                 raise ValueError(f"Expected {filename} to contain a JSON array")
             collection = []
